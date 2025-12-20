@@ -1,24 +1,31 @@
-# sudoku_gleam_webapp
+<div align="center">
 
-[![Package Version](https://img.shields.io/hexpm/v/sudoku_gleam_webapp)](https://hex.pm/packages/sudoku_gleam_webapp)
-[![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/sudoku_gleam_webapp/)
+## sudoku_gleam_webapp
 
-```sh
-gleam add sudoku_gleam_webapp@1
-```
-```gleam
-import sudoku_gleam_webapp
+<p style="margin-bottom: 16px;">
+    A simple webapp for solving sudoku puzzles written in Gleam using the Lustre framework
+</p>
 
-pub fn main() -> Nil {
-  // TODO: An example of the project in use
-}
-```
+<br />
 
-Further documentation can be found at <https://hexdocs.pm/sudoku_gleam_webapp>.
+![GitHub License](https://img.shields.io/github/license/emarifer/sudoku_gleam_webapp) ![Static Badge](https://img.shields.io/badge/Gleam-%3E=1.13.0-ffaff3) ![Static Badge](https://img.shields.io/badge/Lustre%20framework-%3E=5.4.0-ffaff3) ![Static Badge](https://img.shields.io/badge/Erlang/OTP-%3E=27-B83998)
 
-## Development
+</div>
 
-```sh
-gleam run   # Run the project
-gleam test  # Run the tests
-```
+---
+
+> 🚧 This is a work in progress and therefore you should expect that the
+> application may not have all the features at this moment.
+
+---
+
+### 📚 Learn more
+
+* Official website: https://gleam.run/
+* Guides: https://hexdocs.pm/gleam_stdlib/index.html
+* Community: https://discord.com/invite/Fm8Pwmy
+* Gleam discussions on Github: https://github.com/gleam-lang/gleam/discussions
+
+---
+
+### Happy coding 😀!!

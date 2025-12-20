@@ -102,9 +102,9 @@ fn update(_model: Model, msg: Msg) -> Model {
 // VIEW ------------------------------------------------------------------------
 
 fn view(model: Model) -> element.Element(Msg) {
-  html.div([attribute.class("py-8 sm:pt-16 flex flex-col text-center")], [
+  html.div([attribute.class("py-5 sm:pt-16 flex flex-col text-center")], [
     html.div([attribute.class("mx-auto w-11/12 sm:w-1/2")], [
-      html.h1([attribute.class("text-xl sm:text-3xl font-bold my-3 sm:my-6")], [
+      html.h1([attribute.class("text-xl sm:text-3xl font-bold my-2 sm:my-6")], [
         html.text("Sudoku Solver"),
       ]),
       case model {
@@ -219,7 +219,7 @@ fn view_sudoku_grid(puzzle: String) {
     ],
     [
       // Show puzzle
-      html.table([attribute.class("aspect-auto mx-auto")], [
+      html.table([attribute.class("mx-auto")], [
         html.caption([attribute.class("text-sm sm:text-base")], [
           html.text("Board to solve:"),
         ]),
@@ -230,9 +230,8 @@ fn view_sudoku_grid(puzzle: String) {
         |> list.map(fn(body) { element.unsafe_raw_html("", "tbody", [], body) })
       ]),
       // Show sudoku
-      case list.length(sl) == 1 {
-        True -> {
-          let assert [msg] = sl
+      case sl {
+        [msg] -> {
           html.p(
             [
               attribute.class(
@@ -242,8 +241,8 @@ fn view_sudoku_grid(puzzle: String) {
             [html.text(msg)],
           )
         }
-        False -> {
-          html.table([attribute.class("aspect-auto mx-auto")], [
+        _ -> {
+          html.table([attribute.class("mx-auto")], [
             html.caption([attribute.class("text-sm sm:text-base")], [
               html.text("Sudoku solved:"),
             ]),
@@ -265,7 +264,7 @@ fn get_credits() -> element.Element(Msg) {
   html.a(
     [
       attribute.class(
-        "fixed left-3 bottom-6 text-center text-xs text-lime-500 hover:text-lime-300",
+        "absolute left-3 bottom-4 sm:bottom-6 text-center text-xs text-lime-500 hover:text-lime-300",
       ),
       attribute.href("https://github.com/emarifer?tab=repositories"),
       attribute.target("_blank"),

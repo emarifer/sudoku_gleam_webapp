@@ -1,3 +1,4 @@
+import gleam/bool
 import gleam/dict
 import gleam/list
 import gleam/string
@@ -14,7 +15,11 @@ pub type Grid {
 }
 
 pub fn cross(rows: List(String), cols: List(String)) -> List(String) {
-  list.map(rows, fn(r) { list.map(cols, fn(c) { r <> c }) }) |> list.flatten
+  // list.map(rows, fn(r) { list.map(cols, fn(c) { r <> c }) }) |> list.flatten
+
+  use r <- list.flat_map(rows)
+  use c <- list.map(cols)
+  r <> c
 }
 
 pub fn generate_grid(
@@ -82,21 +87,22 @@ fn associate_units(sq: String, u: List(List(String))) -> #(String, List(String))
 pub fn display_board(puzzle: String) -> List(String) {
   let sq_data = string.to_graphemes(puzzle) |> list.sized_chunk(9)
 
-  let row_l =
-    list.map(sq_data, fn(l) {
+  use tr_list <- list.map({
+    {
+      use list_row <- list.map(sq_data)
       "<tr>"
-      <> list.map(l, fn(s) {
-        case string.contains(".0", s) {
-          True -> "<td></td>"
-          False -> "<td>" <> s <> "</td>"
-        }
-      })
+      <> {
+        use sq <- list.map(list_row)
+        use <- bool.guard(string.contains(".0", sq), "<td></td>")
+        "<td>" <> sq <> "</td>"
+      }
       |> string.join("")
       <> "</tr>"
-    })
+    }
     |> list.sized_chunk(3)
+  })
 
-  list.map(row_l, fn(r) { r |> string.join("") })
+  tr_list |> string.join("")
 }
 
 pub fn display_sudoku(res: Grid, sq: List(String)) -> List(String) {

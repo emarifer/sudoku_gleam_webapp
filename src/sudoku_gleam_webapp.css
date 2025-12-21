@@ -70,9 +70,12 @@ form input[type="search"]::-webkit-search-cancel-button {
     cursor: pointer;
 }
 
-/* https://stackoverflow.com/questions/23497444/how-to-make-a-sudoku-grid-using-html-and-css */
+/* https://stackoverflow.com/questions/23497444/how-to-make-a-sudoku-grid-using-html-and-css
+   https://stackoverflow.com/questions/59144662/table-of-fixed-size-with-square-cells-and-centered-content
+*/
 table {
     border-collapse: collapse;
+    width: 192px;
 }
   
 colgroup, tbody {
@@ -81,8 +84,8 @@ colgroup, tbody {
   
 td {
     border: solid thin;
-    height: 1.4em;
-    width: 1.4em;
+    height: calc(192px / 9);
+    width:calc(192px / 9);
     font-size: 14px;
     text-align: center;
     padding: 0;

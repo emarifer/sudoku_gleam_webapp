@@ -3,8 +3,6 @@ import formal/form.{type Form}
 import gleam/int
 import gleam/list
 import gleam/string
-
-// import html_lustre_converter
 import lustre
 import lustre/attribute
 import lustre/element
@@ -213,9 +211,9 @@ fn view_sudoku_grid(puzzle: String) {
 
   html.div(
     [
-      attribute.class(
-        "flex flex-col gap-4 p-2 sm:flex-row sm:justify-between sm:p-6 w-3/4 sm:w-full border rounded-2xl shadow-lg mx-auto",
-      ),
+      attribute.class("flex flex-col gap-4 p-2 sm:flex-row sm:justify-between"),
+      attribute.class("sm:p-6 w-3/4 sm:w-full"),
+      attribute.class("border rounded-2xl shadow-lg mx-auto"),
     ],
     [
       // Show puzzle
@@ -234,9 +232,8 @@ fn view_sudoku_grid(puzzle: String) {
         [msg] -> {
           html.p(
             [
-              attribute.class(
-                "lowercase fl text-error text-xs sm:text-sm sm:w-1/2",
-              ),
+              attribute.class("lowercase fl text-error text-xs"),
+              attribute.class("sm:text-sm sm:w-1/2"),
             ],
             [html.text(msg)],
           )

@@ -14,11 +14,11 @@ version = "1.0.0"
 # https://gleam.run/writing-gleam/gleam-toml/.
 
 [dependencies]
+birl = ">= 1.8.0 and < 2.0.0"
 formal = ">= 3.0.0 and < 4.0.0"
+gleam_community_maths = ">= 2.0.0 and < 3.0.0"
 gleam_stdlib = ">= 0.44.0 and < 2.0.0"
 lustre = ">= 5.4.0 and < 6.0.0"
-birl = ">= 1.8.0 and < 2.0.0"
-gleam_community_maths = ">= 2.0.0 and < 3.0.0"
 
 [dev-dependencies]
 gleeunit = ">= 1.0.0 and < 2.0.0"
@@ -27,4 +27,5 @@ lustre_dev_tools = ">= 2.3.1 and < 3.0.0"
 [tools.lustre.html]
 body = "<main id='app'></main>"
 links = [{rel = "icon", href = "/images/logo.png", type = "image/png"}]
+meta = [{name = "google", content = "notranslate"}]
 title = "Sudoku Solver"

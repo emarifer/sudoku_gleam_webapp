@@ -113,9 +113,12 @@ fn view(model: Model) -> element.Element(Msg) {
             html.div([attribute.class("flex justify-end mt-4")], [
               html.button(
                 [
-                  attribute.class(
-                    "flex justify-end bg-lime-600 text-xs sm:text-sm font-semibold px-3 py-2 sm:px-4 sm:py-2 mr-10 -mt-2  sm:mr-0 sm:-mt-0 rounded-lg hover:bg-base-300 cursor-pointer",
-                  ),
+                  attribute.class("flex justify-end bg-lime-600"),
+                  attribute.class("text-xs sm:text-sm"),
+                  attribute.class("font-semibold px-3 py-2 sm:px-4 sm:py-2"),
+                  attribute.class("mr-10 -mt-2 sm:mr-0 sm:-mt-0 rounded-lg"),
+                  attribute.class("focus:outline-none hover:bg-base-300"),
+                  attribute.class("focus:scale-[1.1] cursor-pointer"),
                   event.on_click(UserClickedResetForm),
                 ],
                 [html.text("Reset")],
@@ -185,7 +188,9 @@ fn view_puzzle_form(form: Form(SubmissionData)) -> element.Element(Msg) {
             // buttons inside of forms submit the form by default.
             attribute.class("text-sm font-semibold cursor-pointer"),
             attribute.class("px-2 py-1 sm:px-4 sm:py-2 bg-primary rounded-lg"),
-            attribute.class("hover:bg-base-300"),
+            attribute.class(
+              "focus:outline-none hover:bg-base-300 focus:scale-[1.1]",
+            ),
           ],
           [html.text("Import")],
         ),

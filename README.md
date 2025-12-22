@@ -24,6 +24,8 @@ This is the web (SPA) version of the [command-line tool for solving Sudoku puzzl
 
 You can try the application at this [link](https://gleam-sudoku.netlify.app/). Simply enter the puzzle you want to solve as an 81-character string (9x9 = 81) with no spaces, where empty squares must be represented by periods '.' or zeros '0' and the rest by digits from '1' to '9', something like this: `...8...5..8..3..2.1....4.........8.663.....419.5.........6....3.9..5..1..17..89...`. A string entered with a different number of characters or prohibited characters will generate a warning message. Pressing the `Import` button will display a grid representation of the puzzle you entered, along with the solved Sudoku. The `Reset` button will return you to the input screen so you can enter a new puzzle.
 
+> You can get the strings you need to pass as an entry from this [`site`](https://www.sudokuwiki.org/), where you can find Sudoku puzzles with all levels of difficulty.
+
 - <ins>Working on the code:</ins>
 
     With Gleam installed as explained [here](https://gleam.run/getting-started/installing/) (and `Erlang` and its `BEAM VM`), you only need to run the following command in a terminal open in the project folder to start the application in development mode:

@@ -100,9 +100,9 @@ fn update(_model: Model, msg: Msg) -> Model {
 // VIEW ------------------------------------------------------------------------
 
 fn view(model: Model) -> element.Element(Msg) {
-  html.div([attribute.class("py-5 sm:pt-16 flex flex-col text-center")], [
+  html.div([attribute.class("flex flex-col py-5 text-center sm:pt-16")], [
     html.div([attribute.class("mx-auto w-11/12 sm:w-1/2")], [
-      html.h1([attribute.class("text-xl sm:text-3xl font-bold my-2 sm:my-6")], [
+      html.h1([attribute.class("my-2 text-xl font-bold sm:my-6 sm:text-3xl")], [
         html.text("Sudoku Solver"),
       ]),
       case model {
@@ -110,15 +110,15 @@ fn view(model: Model) -> element.Element(Msg) {
         PuzzleEntered(puzzle:) -> {
           html.div([], [
             view_sudoku_grid(puzzle),
-            html.div([attribute.class("flex justify-end mt-4")], [
+            html.div([attribute.class("mt-4 flex justify-end")], [
               html.button(
                 [
                   attribute.class("flex justify-end bg-lime-600"),
                   attribute.class("text-xs sm:text-sm"),
-                  attribute.class("font-semibold px-3 py-2 sm:px-4 sm:py-2"),
-                  attribute.class("mr-10 -mt-2 sm:mr-0 sm:-mt-0 rounded-lg"),
-                  attribute.class("focus:outline-none hover:bg-base-300"),
-                  attribute.class("focus:scale-[1.1] cursor-pointer"),
+                  attribute.class("px-3 py-2 font-semibold sm:px-4 sm:py-2"),
+                  attribute.class("-mt-2 mr-10 rounded-lg sm:mr-0 sm:mt-0"),
+                  attribute.class("hover:bg-base-300 focus:outline-none"),
+                  attribute.class("cursor-pointer focus:scale-[1.1]"),
                   event.on_click(UserClickedResetForm),
                 ],
                 [html.text("Reset")],
@@ -145,7 +145,7 @@ fn view_puzzle_form(form: Form(SubmissionData)) -> element.Element(Msg) {
 
   html.form(
     [
-      attribute.class("p-6 w-full border rounded-2xl shadow-lg space-y-2"),
+      attribute.class("w-full space-y-2 rounded-2xl border p-6 shadow-lg"),
       // The message provided to the built-in `on_submit` handler receives the
       // `FormData` associated with the form as a List of (name, value) tuples.
       //
@@ -173,9 +173,10 @@ fn view_puzzle_form(form: Form(SubmissionData)) -> element.Element(Msg) {
         attribute.name("puzzle"),
         attribute.placeholder("Only digits from '1' to '9' and '.' or '0' ..."),
         attribute.autofocus(True),
-        attribute.class(
-          "block text-xs sm:text-base font-mono w-full px-3 py-2 border border-cyan-50 rounded-md focus:outline focus:outline-offset-[-5px] focus:outline-2 focus:outline-cyan-50",
-        ),
+        attribute.class("block w-full font-mono text-xs sm:text-base"),
+        attribute.class("rounded-md border border-cyan-50 px-3 py-2"),
+        attribute.class("focus:outline focus:outline-offset-[-5px]"),
+        attribute.class("focus:outline-2 focus:outline-cyan-50"),
       ]),
 
       // formal provides us with customisable error messages for every element
@@ -186,8 +187,8 @@ fn view_puzzle_form(form: Form(SubmissionData)) -> element.Element(Msg) {
         html.button(
           [
             // buttons inside of forms submit the form by default.
-            attribute.class("text-sm font-semibold cursor-pointer"),
-            attribute.class("px-2 py-1 sm:px-4 sm:py-2 bg-primary rounded-lg"),
+            attribute.class("cursor-pointer text-sm font-semibold"),
+            attribute.class("bg-primary rounded-lg px-2 py-1 sm:px-4 sm:py-2"),
             attribute.class(
               "focus:outline-none hover:bg-base-300 focus:scale-[1.1]",
             ),
@@ -199,7 +200,11 @@ fn view_puzzle_form(form: Form(SubmissionData)) -> element.Element(Msg) {
   )
 }
 
-fn errors_list(errors: List(String)) -> element.Element(Msg) {
+// For elements that do not send events, it is good practice
+// to annotate them using a generic `msg` type (it could also
+// simply be `a`, but `msg` is more expressive) so
+// that they can be used in any context.
+fn errors_list(errors: List(String)) -> element.Element(msg) {
   html.div(
     [],
     list.map(errors, fn(error_message) {
@@ -210,15 +215,18 @@ fn errors_list(errors: List(String)) -> element.Element(Msg) {
   )
 }
 
-// https://hexdocs.pm/lustre/lustre/element.html#unsafe_raw_html
-fn view_sudoku_grid(puzzle: String) {
+// For elements that do not send events, it is good practice
+// to annotate them using a generic `msg` type (it could also
+// simply be `a`, but `msg` is more expressive) so
+// that they can be used in any context.
+fn view_sudoku_grid(puzzle: String) -> element.Element(msg) {
   let #(bl, sl) = sudoku.solver(puzzle)
 
   html.div(
     [
       attribute.class("flex flex-col gap-4 p-2 sm:flex-row sm:justify-between"),
-      attribute.class("sm:p-6 w-3/4 sm:w-full"),
-      attribute.class("border rounded-2xl shadow-lg mx-auto"),
+      attribute.class("w-3/4 sm:w-full sm:p-6"),
+      attribute.class("mx-auto rounded-2xl border shadow-lg"),
     ],
     [
       // Show puzzle
@@ -231,14 +239,15 @@ fn view_sudoku_grid(puzzle: String) {
         html.colgroup([], [html.col([]), html.col([]), html.col([])]),
         ..bl
         |> list.map(fn(body) { element.unsafe_raw_html("", "tbody", [], body) })
+        // ↑↑↑ https://hexdocs.pm/lustre/lustre/element.html#unsafe_raw_html ↑↑↑
       ]),
       // Show sudoku
       case sl {
         [msg] -> {
           html.p(
             [
-              attribute.class("lowercase fl text-error text-xs"),
-              attribute.class("sm:text-sm sm:w-1/2"),
+              attribute.class("fl text-error text-xs lowercase"),
+              attribute.class("sm:w-1/2 sm:text-sm"),
             ],
             [html.text(msg)],
           )
@@ -262,7 +271,11 @@ fn view_sudoku_grid(puzzle: String) {
   )
 }
 
-fn get_credits() -> element.Element(Msg) {
+// For elements that do not send events, it is good practice
+// to annotate them using a generic `msg` type (it could also
+// simply be `a`, but `msg` is more expressive) so
+// that they can be used in any context.
+fn get_credits() -> element.Element(msg) {
   html.a(
     [
       attribute.class(
@@ -273,11 +286,9 @@ fn get_credits() -> element.Element(Msg) {
       attribute.rel("noopener noreferrer"),
     ],
     [
-      html.text(
-        "⚡ Made by emarifer | Copyright © "
-        <> { birl.now() |> birl.get_day }.year |> int.to_string
-        <> " - MIT Licensed",
-      ),
+      html.text("⚡ Made by emarifer | Copyright © "),
+      html.text({ birl.now() |> birl.get_day }.year |> int.to_string),
+      html.text(" - MIT Licensed"),
     ],
   )
 }

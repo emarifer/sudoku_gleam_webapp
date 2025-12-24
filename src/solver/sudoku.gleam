@@ -1,9 +1,12 @@
 import gleam/dict
+import gleam/float
 import gleam/int
 import gleam/list
 import gleam/option
 import gleam/result
 import gleam/string
+import gleam/time/duration
+import gleam/time/timestamp
 import gleam_community/maths
 import solver/helpers.{type Grid, GridErr, GridOk, get_list_from_dict}
 
@@ -15,7 +18,7 @@ pub type Data =
 // const exocet_sudoku = "......7....71.9...68..7..1...1.9.6.....3...2..4......3..8.6.1..5......4......2..5"
 // const escargot_sudoku = "1....7.9..3..2...8..96..5....53..9...1..8...26....4...3......1..4......7..7...3.."
 
-pub fn solver(puzzle: String) -> #(List(String), List(String)) {
+pub fn solver(puzzle: String) -> #(List(String), List(String), String) {
   let squares = helpers.cross(helpers.rows, helpers.cols)
   let initial_grid = helpers.generate_grid(squares, helpers.digits)
   let unitslist = helpers.units_list(helpers.rows, helpers.cols)
@@ -23,25 +26,27 @@ pub fn solver(puzzle: String) -> #(List(String), List(String)) {
   let peers = helpers.peers(squares, units)
   let dt: Data = #(units, peers)
 
-  //   let t1 = timestamp.system_time()
+  let t1 = timestamp.system_time()
+
+  let sudoku_solved =
+    puzzle
+    |> solve(squares, initial_grid, dt)
+    |> helpers.display_sudoku(squares)
+
+  let t2 = timestamp.system_time()
+
+  let time =
+    timestamp.difference(t1, t2)
+    |> duration.to_seconds
+    |> float.to_precision(4)
+    |> float.to_string
 
   #(
     puzzle
       |> helpers.display_board,
-    puzzle
-      |> solve(squares, initial_grid, dt)
-      |> helpers.display_sudoku(squares),
+    sudoku_solved,
+    time,
   )
-  //   let t2 = timestamp.system_time()
-
-  //   let time =
-  //     timestamp.difference(t1, t2)
-  //     |> duration.to_seconds
-  //     |> float.to_precision(4)
-  //     |> float.to_string
-
-  //   io.println("")
-  //   io.println("Sudoku solved in " <> time <> " seconds")
 }
 
 // PARSING A GRID --------------------------------------------------------------
@@ -274,9 +279,9 @@ fn search(v: Grid, squares: List(String), dt: Data) -> Grid {
       case r {
         // Solved!
         True -> GridOk(grid)
-        // Chose the unfilled square s with the fewest possibilities
+        // Choose the unfilled square s with the fewest possibilities
         False -> {
-          let #(s, values) = chose_fewest_possibilities(grid)
+          let #(s, values) = choose_fewest_possibilities(grid)
 
           loop_until_solution_found(values, fn(d) {
             search(assign(grid, #(s, d), dt), squares, dt)
@@ -287,7 +292,7 @@ fn search(v: Grid, squares: List(String), dt: Data) -> Grid {
   }
 }
 
-fn chose_fewest_possibilities(
+fn choose_fewest_possibilities(
   g: dict.Dict(String, List(String)),
 ) -> #(String, List(String)) {
   let r = dict.filter(g, fn(_k, v) { list.length(v) > 1 }) |> dict.to_list

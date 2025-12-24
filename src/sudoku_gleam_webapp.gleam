@@ -1,5 +1,6 @@
 import birl
 import formal/form.{type Form}
+import gleam/bool
 import gleam/int
 import gleam/list
 import gleam/string
@@ -220,55 +221,74 @@ fn errors_list(errors: List(String)) -> element.Element(msg) {
 // simply be `a`, but `msg` is more expressive) so
 // that they can be used in any context.
 fn view_sudoku_grid(puzzle: String) -> element.Element(msg) {
-  let #(bl, sl) = sudoku.solver(puzzle)
+  let #(bl, sl, time) = sudoku.solver(puzzle)
 
-  html.div(
-    [
-      attribute.class("flex flex-col gap-4 p-2 sm:flex-row sm:justify-between"),
-      attribute.class("w-3/4 sm:w-full sm:p-6"),
-      attribute.class("mx-auto rounded-2xl border shadow-lg"),
-    ],
-    [
-      // Show puzzle
-      html.table([attribute.class("mx-auto")], [
-        html.caption([attribute.class("text-sm sm:text-base")], [
-          html.text("Board to solve:"),
+  element.fragment([
+    html.div(
+      [
+        attribute.class(
+          "flex flex-col gap-4 p-2 sm:flex-row sm:justify-between",
+        ),
+        attribute.class("w-3/4 sm:w-full sm:p-6"),
+        attribute.class("mx-auto rounded-2xl border shadow-lg"),
+      ],
+      [
+        // Show puzzle
+        html.table([attribute.class("mx-auto")], [
+          html.caption([attribute.class("text-sm sm:text-base")], [
+            html.text("Board to solve:"),
+          ]),
+          html.colgroup([], [html.col([]), html.col([]), html.col([])]),
+          html.colgroup([], [html.col([]), html.col([]), html.col([])]),
+          html.colgroup([], [html.col([]), html.col([]), html.col([])]),
+          ..bl
+          |> list.map(fn(body) {
+            element.unsafe_raw_html("", "tbody", [], body)
+          })
+          // ↑ https://hexdocs.pm/lustre/lustre/element.html#unsafe_raw_html ↑
         ]),
-        html.colgroup([], [html.col([]), html.col([]), html.col([])]),
-        html.colgroup([], [html.col([]), html.col([]), html.col([])]),
-        html.colgroup([], [html.col([]), html.col([]), html.col([])]),
-        ..bl
-        |> list.map(fn(body) { element.unsafe_raw_html("", "tbody", [], body) })
-        // ↑↑↑ https://hexdocs.pm/lustre/lustre/element.html#unsafe_raw_html ↑↑↑
-      ]),
-      // Show sudoku
-      case sl {
-        [msg] -> {
-          html.p(
-            [
-              attribute.class("fl text-error text-xs lowercase"),
-              attribute.class("sm:w-1/2 sm:text-sm"),
-            ],
-            [html.text(msg)],
-          )
-        }
-        _ -> {
-          html.table([attribute.class("mx-auto")], [
-            html.caption([attribute.class("text-sm sm:text-base")], [
-              html.text("Sudoku solved:"),
-            ]),
-            html.colgroup([], [html.col([]), html.col([]), html.col([])]),
-            html.colgroup([], [html.col([]), html.col([]), html.col([])]),
-            html.colgroup([], [html.col([]), html.col([]), html.col([])]),
-            ..sl
-            |> list.map(fn(body) {
-              element.unsafe_raw_html("", "tbody", [], body)
-            })
-          ])
-        }
-      },
-    ],
-  )
+        // Show sudoku
+        case sl {
+          [msg] -> {
+            html.p(
+              [
+                attribute.class("fl text-error text-xs lowercase"),
+                attribute.class("sm:w-1/2 sm:text-sm"),
+              ],
+              [html.text(msg)],
+            )
+          }
+          _ -> {
+            html.table([attribute.class("mx-auto")], [
+              html.caption([attribute.class("text-sm sm:text-base")], [
+                html.text("Sudoku solved:"),
+              ]),
+              html.colgroup([], [html.col([]), html.col([]), html.col([])]),
+              html.colgroup([], [html.col([]), html.col([]), html.col([])]),
+              html.colgroup([], [html.col([]), html.col([]), html.col([])]),
+              ..sl
+              |> list.map(fn(body) {
+                element.unsafe_raw_html("", "tbody", [], body)
+              })
+            ])
+          }
+        },
+      ],
+    ),
+    html.small(
+      [
+        {
+          use <- bool.guard(list.length(sl) == 1, attribute.class("hidden"))
+          attribute.class("block text-[10px] font-bold text-neutral-400")
+        },
+      ],
+      [
+        html.text("Sudoku solved in "),
+        html.text(time),
+        html.text(" seconds"),
+      ],
+    ),
+  ])
 }
 
 // For elements that do not send events, it is good practice
